@@ -1,7 +1,7 @@
 # Open Multiple URLs Tab
 
 A Chrome/Chromium extension that opens lists of URLs from a persistent browser tab.
-This is [Justin Ansel's independent fork](https://github.com/jansel/Open-Multiple-URLs) of
+This is [Jason Ansel's independent fork](https://github.com/jansel/Open-Multiple-URLs) of
 [htrinter/Open-Multiple-URLs](https://github.com/htrinter/Open-Multiple-URLs), based on upstream 1.7.5.
 It has its own releases and is not intended to merge upstream.
 
@@ -19,7 +19,7 @@ The upstream options for lazy loading, deduplication, random/reverse order, Chro
 
 ## Install
 
-The first **unlisted** Chrome Web Store release is being prepared. A link will be added here once the new listing exists; the upstream store listing installs a different extension.
+The new **unlisted** [Chrome Web Store listing](https://chromewebstore.google.com/detail/legkeidpegglajidbdpiddmallhmfokj) has been created for version 2.0.0. It will become installable after submission and Google's approval. The upstream store listing installs a different extension.
 
 For local installation:
 

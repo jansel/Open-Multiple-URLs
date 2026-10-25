@@ -22,16 +22,19 @@ The package script uses the npm-provided ZIP library, so it does not require a s
 6. Review the completed listing and submit it for review. Choose automatic publication after approval if offered and desired. Unlisted submissions still require Google's review.
 7. Copy the new item's actual store URL into the README. Record the item ID below for future uploads. Do not invent a link or reuse the upstream ID.
 
-Current listing ID: **Not assigned yet.**
-Current store URL: **Not available yet.**
+Current listing ID: `legkeidpegglajidbdpiddmallhmfokj`.
+
+Current store URL: https://chromewebstore.google.com/detail/legkeidpegglajidbdpiddmallhmfokj
+
+Version 2.0.0 is uploaded as a draft with **Unlisted** visibility, free of charge, in all regions. The listing, icon, light/dark screenshots, and privacy disclosures are saved. Submission requires the privacy policy to be publicly reachable and the publisher's contact email to be verified. The store link will become installable after approval.
 
 ## Listing copy
 
 **Name:** Open Multiple URLs Tab
 
-**Summary:** Open lists of URLs from a persistent tab, with automatic link extraction when pasting a whole new list.
+**Summary:** Open lists of URLs from a persistent browser tab. Automatically extract links when pasting a whole new list.
 
-**Category:** Productivity (or the closest productivity/tools category offered by the dashboard).
+**Category:** Productivity → Tools.
 
 **Language:** English.
 
