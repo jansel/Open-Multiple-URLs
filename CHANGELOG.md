@@ -1,5 +1,22 @@
 # Changelog
 
+## 2.0.0 — Open Multiple URLs Tab
+
+First independent Chrome/Chromium release of this fork, based on upstream 1.7.5.
+
+- Rename the extension and point its homepage to this fork.
+- Open and reuse a persistent interface tab per browser window instead of a popup.
+- Automatically extract URLs from full-field paste, leaving partial edits and pastes without matches intact.
+- Remember input locally by default, with an opt-out.
+- Add a responsive light/dark layout, loading status, and tab-group refresh on return.
+- Keep opened tabs in the originating window and report individual opening failures.
+- Prevent active-content URL schemes from being executed by lazy-loading placeholders.
+- Upgrade dependencies and tooling; add fresh-profile Chromium tests and simplify CI.
+- Remove Firefox build entrypoints and the obsolete tooltip dependency.
+- Add release packaging, store screenshots, publishing instructions, and a privacy policy.
+
+## Upstream history
+
 ## 1.7.5
 
 - Changed
