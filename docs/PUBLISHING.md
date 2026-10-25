@@ -26,7 +26,7 @@ Current listing ID: `legkeidpegglajidbdpiddmallhmfokj`.
 
 Current store URL: https://chromewebstore.google.com/detail/legkeidpegglajidbdpiddmallhmfokj
 
-Version 2.0.0 is uploaded as a draft with **Unlisted** visibility, free of charge, in all regions. The listing, icon, light/dark screenshots, and privacy disclosures are saved. Submission requires the privacy policy to be publicly reachable and the publisher's contact email to be verified. The store link will become installable after approval.
+Version 2.0.0 was submitted on **October 25, 2026** and is **pending review**. It will publish automatically after approval with **Unlisted** visibility, free of charge, in all regions. The listing, icon, light/dark screenshots, privacy disclosures, and reviewer instructions are saved. The privacy policy is publicly reachable and the publisher's contact email is verified. The store link will become installable after approval.
 
 ## Listing copy
 

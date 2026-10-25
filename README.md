@@ -19,7 +19,7 @@ The upstream options for lazy loading, deduplication, random/reverse order, Chro
 
 ## Install
 
-The new **unlisted** [Chrome Web Store listing](https://chromewebstore.google.com/detail/legkeidpegglajidbdpiddmallhmfokj) has been created for version 2.0.0. It will become installable after submission and Google's approval. The upstream store listing installs a different extension.
+Version 2.0.0 was submitted to the [Chrome Web Store](https://chromewebstore.google.com/detail/legkeidpegglajidbdpiddmallhmfokj) on October 25, 2026 and is **pending review**. It will publish automatically with **Unlisted** visibility after Google's approval. The upstream store listing installs a different extension.
 
 For local installation:
 
