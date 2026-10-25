@@ -11,7 +11,7 @@ export const NEW_TAB_GROUP_ID = -2
 export const NEW_TAB_GROUP_TITLE = 'New Tab Group'
 
 export const loadTabGroups = async (): Promise<TabGroup[]> => {
-  const tabGroups = await (browser.tabGroups?.query({}) || Promise.resolve([]))
+  const tabGroups = await (browser.tabGroups?.query({ windowId: -2 }) || Promise.resolve([]))
   return [
     { id: NO_TAB_GROUP_ID, title: NO_TAB_GROUP_TITLE },
     { id: NEW_TAB_GROUP_ID, title: NEW_TAB_GROUP_TITLE },

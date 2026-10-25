@@ -4,8 +4,8 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import packageJson from './package.json' with { type: 'json' }
 
-export default defineConfig(({ mode }) => {
-  const target = mode === 'firefox' ? 'firefox' : 'chrome'
+export default defineConfig(() => {
+  const target = 'chrome'
   return {
     plugins: [
       vue(),

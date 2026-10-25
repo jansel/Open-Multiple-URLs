@@ -1,4 +1,5 @@
 import browser from 'webextension-polyfill'
+import type { LoadSitesResult } from '@/serviceworker/types'
 import { canLazyLoad, hasValidSchema } from './urlschema'
 import { CONTAINER_COLORS, NEW_CONTAINER_ID, NO_CONTAINER_ID } from './containers'
 import { NEW_TAB_GROUP_ID, NO_TAB_GROUP_ID } from './tabgroups'
@@ -49,8 +50,9 @@ export const loadSites = async (
   deduplicate: boolean,
   handleAsSearchQuery: boolean,
   selectedTabGroupId: number | null | undefined = undefined,
-  selectedContainerId: string | null | undefined = undefined
-): Promise<void> => {
+  selectedContainerId: string | null | undefined = undefined,
+  windowId?: number
+): Promise<LoadSitesResult> => {
   let lines = splitInputLines(text, deduplicate)
 
   if (reverse) {
@@ -71,6 +73,8 @@ export const loadSites = async (
     ).cookieStoreId
   }
 
+  let opened = 0
+  let failed = 0
   const createdTabs: browser.Tabs.Tab[] = []
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i].trim()
@@ -94,6 +98,7 @@ export const loadSites = async (
       url: isSearchQuery ? 'about:blank' : url,
       active: false
     }
+    if (windowId != null) tabCreateProperties.windowId = windowId
     if (selectedContainerId != null && selectedContainerId !== NO_CONTAINER_ID) {
       tabCreateProperties.cookieStoreId = selectedContainerId
     }
@@ -105,17 +110,24 @@ export const loadSites = async (
       if (isSearchQuery) {
         await browser.search.query({ text: url, tabId: createdTab.id })
       }
+      opened++
     } catch (error) {
+      failed++
       console.error('Failed to create tab', tabCreateProperties, error)
     }
   }
 
-  if (selectedTabGroupId != null && selectedTabGroupId !== NO_TAB_GROUP_ID) {
+  if (
+    createdTabs.length > 0 &&
+    selectedTabGroupId != null &&
+    selectedTabGroupId !== NO_TAB_GROUP_ID
+  ) {
     await browser.tabs.group?.({
       tabIds: createdTabs.map((tab) => tab.id || -1),
       groupId: selectedTabGroupId === NEW_TAB_GROUP_ID ? undefined : selectedTabGroupId
     })
   }
+  return { opened, failed }
 }
 
 export const getTabCount = (text: string, deduplicate: boolean) => {

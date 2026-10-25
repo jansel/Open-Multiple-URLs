@@ -142,7 +142,7 @@ describe('browser action', () => {
       ).toBeFalsy()
       expect(
         (wrapper.find('input[type="checkbox"]#preserve').element as HTMLInputElement).checked
-      ).toBeFalsy()
+      ).toBeTruthy()
       expect(
         (wrapper.find('input[type="checkbox"]#deduplicate').element as HTMLInputElement).checked
       ).toBeFalsy()
@@ -156,7 +156,7 @@ describe('browser action', () => {
           lazyLoad: false,
           random: false,
           reverse: false,
-          preserve: false,
+          preserve: true,
           deduplicate: false,
           searchquery: false
         }
@@ -168,7 +168,7 @@ describe('browser action', () => {
           lazyLoad: true,
           random: false,
           reverse: false,
-          preserve: false,
+          preserve: true,
           deduplicate: false,
           searchquery: false
         }
@@ -180,7 +180,7 @@ describe('browser action', () => {
           lazyLoad: false,
           random: true,
           reverse: false,
-          preserve: false,
+          preserve: true,
           deduplicate: false,
           searchquery: false
         }
@@ -192,7 +192,7 @@ describe('browser action', () => {
           lazyLoad: false,
           random: false,
           reverse: true,
-          preserve: false,
+          preserve: true,
           deduplicate: false,
           searchquery: false
         }
@@ -216,7 +216,7 @@ describe('browser action', () => {
           lazyLoad: false,
           random: false,
           reverse: false,
-          preserve: false,
+          preserve: true,
           deduplicate: true,
           searchquery: false
         }
@@ -228,7 +228,7 @@ describe('browser action', () => {
           lazyLoad: false,
           random: false,
           reverse: false,
-          preserve: false,
+          preserve: true,
           deduplicate: false,
           searchquery: true
         }
@@ -302,16 +302,16 @@ describe('browser action', () => {
         const checkbox = wrapper.find(checkboxSelector)
 
         expect(mockStore[storeKey]).toBeFalsy()
-
-        await checkbox.trigger('click')
+        await checkbox.setValue(false)
+        await checkbox.setValue(true)
         expect((checkbox.element as HTMLInputElement).checked).toBeTruthy()
         expect(mockStore[storeKey]).toBeTruthy()
 
-        await checkbox.trigger('click')
+        await checkbox.setValue(false)
         expect((checkbox.element as HTMLInputElement).checked).toBeFalsy()
         expect(mockStore[storeKey]).toBeFalsy()
-
-        await checkbox.trigger('click')
+        await checkbox.setValue(false)
+        await checkbox.setValue(true)
         expect((checkbox.element as HTMLInputElement).checked).toBeTruthy()
         expect(mockStore[storeKey]).toBeTruthy()
       }

@@ -29,6 +29,8 @@ describe('urlschema', () => {
   describe('canLazyLoad', () => {
     it.each([
       { url: 'file:///example.txt', expected: false },
+      { url: 'javascript:alert(1)', expected: false },
+      { url: 'data:text/html,hello', expected: false },
       { url: 'chrome://settings', expected: false },
       { url: 'moz-extension://example', expected: false },
       { url: 'https://example.com', expected: true },

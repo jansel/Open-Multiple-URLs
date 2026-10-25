@@ -6,23 +6,19 @@ import { NO_LAZY_LOAD_SCHEMES } from './logic/urlschema'
 <template>
   <section id="option-bar-hwrapper">
     <section>
-      <!-- Loading options -->
+      <h3>Loading</h3>
       <label class="checkbox"
         ><input
           type="checkbox"
           id="lazyLoad"
-          tabindex="3"
           :checked="store.lazyLoadingChecked"
           @change="checkLazyLoading"
         />
         Do not load tabs until selected &nbsp;<span
-          :aria-label="
+          :title="
             'Search queries and the following URL schemes are not supported: ' +
             NO_LAZY_LOAD_SCHEMES.join(', ')
           "
-          data-microtip-position="bottom"
-          data-microtip-size="large"
-          role="tooltip"
         >
           ⓘ
         </span>
@@ -31,7 +27,6 @@ import { NO_LAZY_LOAD_SCHEMES } from './logic/urlschema'
         ><input
           type="checkbox"
           id="random"
-          tabindex="4"
           :checked="store.loadInRandomOrderChecked"
           @change="checkLoadInRandomOrder"
         />
@@ -41,7 +36,6 @@ import { NO_LAZY_LOAD_SCHEMES } from './logic/urlschema'
         ><input
           type="checkbox"
           id="reverse"
-          tabindex="4"
           :checked="store.loadInReverseOrderChecked"
           @change="checkLoadInReverseOrder"
         />
@@ -50,11 +44,11 @@ import { NO_LAZY_LOAD_SCHEMES } from './logic/urlschema'
     </section>
     <!-- URL handling options -->
     <section>
+      <h3>URL handling</h3>
       <label class="checkbox"
         ><input
           type="checkbox"
           id="deduplicate"
-          tabindex="5"
           :checked="store.deduplicateURLsChecked"
           @change="checkDeduplicateURLs"
         />
@@ -64,7 +58,6 @@ import { NO_LAZY_LOAD_SCHEMES } from './logic/urlschema'
         ><input
           type="checkbox"
           id="searchquery"
-          tabindex="6"
           :checked="store.handleAsSearchQueryChecked"
           @change="checkHandleAsSearchQuery"
         />
@@ -74,16 +67,17 @@ import { NO_LAZY_LOAD_SCHEMES } from './logic/urlschema'
   </section>
   <!-- Input handling options -->
   <section>
+    <h3>Workspace</h3>
     <label class="checkbox"
       ><input
         type="checkbox"
         id="preserve"
-        tabindex="5"
         :checked="store.preserveInputChecked"
         @change="checkPreserveInput"
       />
       Preserve input</label
     >
+    <p class="option-hint">Remember your list when you reload or reopen this tab.</p>
   </section>
 </template>
 

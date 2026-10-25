@@ -1,5 +1,5 @@
 import browser from 'webextension-polyfill'
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest'
 import { NEW_TAB_GROUP_ID, NO_TAB_GROUP_ID } from '@/browseraction/components/logic/tabgroups'
 import { NEW_CONTAINER_ID, NO_CONTAINER_ID } from '@/browseraction/components/logic/containers'
 import { getTabCount, loadSites, splitInputLines } from '@/browseraction/components/logic/load'
@@ -7,16 +7,13 @@ import { getTabCount, loadSites, splitInputLines } from '@/browseraction/compone
 const MOCK_TAB_GROUP_ID = 42
 const MOCK_CONTAINER_ID = '123-container'
 
-const tabCreateMock = vi.fn()
+const { tabCreateMock } = vi.hoisted(() => ({ tabCreateMock: vi.fn() }))
 const ciCreateMock = vi.fn()
 
 vi.mock('webextension-polyfill', () => ({
   default: {
     tabs: {
-      create: (props: any) => {
-        tabCreateMock(props)
-        return Promise.resolve({ id: 42 })
-      },
+      create: tabCreateMock,
       group: vi.fn()
     },
     search: {
@@ -37,6 +34,9 @@ const url2 = 'https://example.com'
 const urlList = url1 + '\n' + url2
 
 describe('load tabs', () => {
+  beforeEach(() => {
+    tabCreateMock.mockResolvedValue({ id: 42 })
+  })
   afterEach(() => {
     vi.resetAllMocks()
   })
@@ -202,5 +202,23 @@ describe('load tabs', () => {
 
     expect(tabCreateMock).toHaveBeenCalledTimes(3)
     expect(browser.search.query).not.toHaveBeenCalled()
+  })
+  it('keeps opening tabs in the originating window', async () => {
+    await loadSites(urlList, false, false, false, false, false, null, null, 17)
+    expect(tabCreateMock).toHaveBeenCalledWith({ url: url1, active: false, windowId: 17 })
+  })
+
+  it('reports failures and continues with valid URLs', async () => {
+    const log = vi.spyOn(console, 'error').mockImplementation(() => {})
+    tabCreateMock.mockRejectedValueOnce(new Error('Invalid URL'))
+    const result = await loadSites(urlList, false, false, false, false, false)
+    expect(result).toEqual({ opened: 1, failed: 1 })
+    expect(tabCreateMock).toHaveBeenCalledTimes(2)
+    log.mockRestore()
+  })
+
+  it('does not create an empty group', async () => {
+    await loadSites('', false, false, false, false, false, NEW_TAB_GROUP_ID)
+    expect(browser.tabs.group).not.toHaveBeenCalled()
   })
 })

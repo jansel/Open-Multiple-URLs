@@ -1,5 +1,5 @@
 /**
- * Type definition for message passing between popup and background script
+ * Type definition for message passing between interface tab and background script
  */
 
 export interface LoadSitesMessage {
@@ -12,4 +12,9 @@ export interface LoadSitesMessage {
   handleAsSearchQuery: boolean
   selectedTabGroupId: number | null | undefined
   selectedContainerId: string | null | undefined
+}
+
+export interface LoadSitesResult {
+  opened: number
+  failed: number
 }

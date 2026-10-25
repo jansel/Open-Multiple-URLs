@@ -1,16 +1,16 @@
 <template>
   <section id="action-bar">
-    <button id="extract" tabindex="6" @click="setUrlListInputData">Extract URLs from text</button>
-    <button id="open" tabindex="2" @click="openURLs">
+    <button id="extract" @click="setUrlListInputData">Extract URLs from text</button>
+    <button id="open" :disabled="opening || tabCount === 0" @click="openURLs">
       <strong>
         Open URLs <span v-if="tabCount > 0">({{ tabCount }})</span>
       </strong>
     </button>
     <select
+      aria-label="Tab group"
       id="tabGroupSelection"
       v-if="tabGroupsSupported"
       v-model="selectedTabGroupId"
-      @change="setTabGroupSelection"
     >
       <option v-for="group in tabGroups" :key="group.id" :value="group.id">
         {{ group.title }}
@@ -30,13 +30,12 @@
       id="tabcount"
       v-if="tabCount >= 25"
       aria-label="Opening many URLs at once may lead to long wait times or crash your browser."
-      data-microtip-position="bottom"
-      data-microtip-size="medium"
-      role="tooltip"
+      title="Opening many URLs at once can slow your browser."
     >
       &#9888;
     </span>
   </section>
+  <p v-if="status" role="status" class="action-status">{{ status }}</p>
 </template>
 
 <script lang="ts">
@@ -45,18 +44,22 @@ import { store } from '@/browseraction/components/store/store'
 import { loadTabGroups } from './logic/tabgroups'
 import { loadContainers } from './logic/containers'
 import browser from 'webextension-polyfill'
-import type { LoadSitesMessage } from '@/serviceworker/types'
+import type { LoadSitesMessage, LoadSitesResult } from '@/serviceworker/types'
 import { getTabCount } from './logic/load'
 
 export default {
   data() {
     return {
-      selectedTabGroupId: store.selectedTabGroupId,
+      opening: false,
+      status: '',
       selectedContainerId: store.selectedContainerId
     }
   },
   methods: {
-    openURLs() {
+    async openURLs() {
+      if (this.opening) return
+      this.opening = true
+      this.status = 'Opening URLs…'
       const message: LoadSitesMessage = {
         action: 'loadSites',
         text: store.urlList,
@@ -68,22 +71,21 @@ export default {
         selectedTabGroupId: this.selectedTabGroupId,
         selectedContainerId: this.selectedContainerId
       }
-      browser.runtime.sendMessage(message).then(() => {
-        loadTabGroups().then((tabGroups) => {
-          store.tabGroups = tabGroups
-        })
-        loadContainers().then((containers) => {
-          store.containers = containers
-        })
-      })
+      try {
+        const result = (await browser.runtime.sendMessage(message)) as LoadSitesResult | undefined
+        store.tabGroups = await loadTabGroups()
+        store.containers = await loadContainers()
+        this.status = result?.failed
+          ? `Opened ${result.opened} URLs. ${result.failed} could not be opened; check the addresses and try again.`
+          : 'Finished opening URLs. Your list is ready to use again.'
+      } catch {
+        this.status = 'Could not finish opening URLs. Check your list and try again.'
+      } finally {
+        this.opening = false
+      }
     },
     setUrlListInputData() {
       store.setUrlList(extractURLs(store.urlList))
-    },
-    setTabGroupSelection() {
-      this.$nextTick(() => {
-        store.setSelectedTabGroupId(this.selectedTabGroupId)
-      })
     },
     setContainerSelection() {
       this.$nextTick(() => {
@@ -92,6 +94,14 @@ export default {
     }
   },
   computed: {
+    selectedTabGroupId: {
+      get() {
+        return store.selectedTabGroupId
+      },
+      set(value: number) {
+        store.setSelectedTabGroupId(value)
+      }
+    },
     tabCount: function () {
       return getTabCount(store.urlList, store.deduplicateURLsChecked)
     },

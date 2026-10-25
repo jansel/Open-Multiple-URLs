@@ -4,6 +4,7 @@ import { loadSitesListener } from '@/serviceworker/background'
 
 vi.mock('webextension-polyfill', () => ({
   default: {
+    action: { onClicked: { addListener: vi.fn() } },
     runtime: { onMessage: { addListener: vi.fn() } }
   }
 }))

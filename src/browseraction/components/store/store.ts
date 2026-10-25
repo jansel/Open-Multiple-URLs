@@ -41,8 +41,10 @@ export const store = reactive({
   },
   setPreserveInputChecked(value: boolean) {
     this.preserveInputChecked = value
-    browser.storage.local.set({ [BrowserStorageKey.preserve]: value })
-    browser.storage.local.set({ [BrowserStorageKey.urlList]: value ? store.urlList : '' })
+    browser.storage.local.set({
+      [BrowserStorageKey.preserve]: value,
+      [BrowserStorageKey.urlList]: value ? store.urlList : ''
+    })
   },
   setDeduplicateURLsChecked(value: boolean) {
     this.deduplicateURLsChecked = value

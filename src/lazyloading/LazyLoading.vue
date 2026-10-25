@@ -5,6 +5,7 @@
 </template>
 
 <script lang="ts">
+import { canLazyLoad, hasValidSchema } from '../browseraction/components/logic/urlschema'
 export default {
   methods: {
     init: () => {
@@ -30,14 +31,16 @@ export default {
       }
       document.title = `[${docTitle}]`
 
-      // load site on focus
-      window.addEventListener(
-        'focus',
-        () => {
-          window.location.replace(window.location.hash.substr(1))
-        },
-        false
-      )
+      // Never execute active content from a URL fragment inside an extension page.
+      if (!hasValidSchema(url) || !canLazyLoad(url)) return
+
+      const navigate = () => window.location.replace(url)
+      window.addEventListener('focus', navigate, { once: true })
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') navigate()
+      })
+      // A quickly selected tab may already be focused before this script runs.
+      if (document.hasFocus() && document.visibilityState === 'visible') navigate()
     }
   },
   beforeMount() {
