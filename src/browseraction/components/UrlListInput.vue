@@ -1,3 +1,27 @@
+<script setup lang="ts">
+import { onMounted, ref } from 'vue'
+import { store } from './store/store'
+import { extractURLs } from './logic/extract'
+
+const urlTextArea = ref<HTMLTextAreaElement | null>(null)
+let replacesAllOnPaste = false
+
+onMounted(() => urlTextArea.value?.select())
+
+function handlePaste(event: ClipboardEvent) {
+  const input = event.target as HTMLTextAreaElement
+  replacesAllOnPaste = input.selectionStart === 0 && input.selectionEnd === input.value.length
+}
+
+function handleInput(event: Event) {
+  const input = event.target as HTMLTextAreaElement
+  const shouldExtract = replacesAllOnPaste && (event as InputEvent).inputType === 'insertFromPaste'
+  replacesAllOnPaste = false
+  // Keep plain text (including search queries) when extraction finds nothing.
+  store.setUrlList(shouldExtract ? extractURLs(input.value) || input.value : input.value)
+}
+</script>
+
 <template>
   <section id="url-list-input">
     <label for="urls">List of URLs / Text to extract URLs from:</label>
@@ -7,40 +31,8 @@
       wrap="soft"
       tabindex="1"
       :value="store.urlList"
-      @input="handleUrlListInput"
+      @paste="handlePaste"
+      @input="handleInput"
     ></textarea>
   </section>
 </template>
-
-<script lang="ts">
-import { onMounted, ref } from 'vue'
-import { store } from '@/browseraction/components/store/store'
-
-export default {
-  computed: {
-    store() {
-      return store
-    }
-  },
-  setup() {
-    const urlTextArea = ref(null)
-
-    onMounted(() => {
-      if (urlTextArea.value) {
-        ;(urlTextArea.value as unknown as HTMLInputElement).select()
-      }
-    })
-
-    return {
-      urlTextArea
-    }
-  },
-  methods: {
-    handleUrlListInput(event: Event) {
-      store.setUrlList((event?.target as HTMLInputElement).value)
-    }
-  }
-}
-</script>
-
-<style scoped></style>
