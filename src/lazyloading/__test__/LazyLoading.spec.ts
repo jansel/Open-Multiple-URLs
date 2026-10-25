@@ -1,6 +1,8 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, afterEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import App from '../LazyLoading.vue'
+
+afterEach(() => vi.unstubAllGlobals())
 
 describe('lazy loading', () => {
   describe('set title', () => {
@@ -31,17 +33,16 @@ describe('lazy loading', () => {
 
   it('navigates on focus', async () => {
     const originalLocation = window.location
-    delete (window as any).location
-    window.location = {
+    vi.stubGlobal('location', {
       ...originalLocation,
       replace: vi.fn()
-    }
+    })
 
     window.location.hash = '#https://github.com/htrinter/'
     mount(App)
     window.dispatchEvent(new Event('focus'))
     expect(window.location.replace).toHaveBeenCalledWith('https://github.com/htrinter/')
 
-    window.location = originalLocation
+    vi.unstubAllGlobals()
   })
 })

@@ -3,8 +3,13 @@ import type { LoadSitesMessage } from './types'
 import { loadSites } from '../browseraction/components/logic/load'
 
 // Listen for messages from the popup
-export const loadSitesListener = async (message: any) => {
-  if (message.action === 'loadSites') {
+export const loadSitesListener = async (message: unknown) => {
+  if (
+    message &&
+    typeof message === 'object' &&
+    'action' in message &&
+    message.action === 'loadSites'
+  ) {
     const loadSitesMessage = message as LoadSitesMessage
     return loadSites(
       loadSitesMessage.text,

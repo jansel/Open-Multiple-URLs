@@ -1,3 +1,29 @@
+vi.mock('webextension-polyfill', () => ({
+  default: {
+    runtime: {
+      getURL: (val: string) => val,
+      sendMessage: (message: any) => {
+        sendMessageCalls.push(message)
+        return Promise.resolve()
+      },
+      onMessage: {
+        addListener: vi.fn()
+      }
+    },
+    storage: {
+      local: {
+        get: (key: string | string[]) => {
+          if (Array.isArray(key)) {
+            return key.reduce((acc, k) => ({ ...acc, [k]: mockStore[k] }), {})
+          }
+          return { [key]: mockStore[key] }
+        },
+        set: (val: any) => (mockStore = { ...mockStore, ...val })
+      }
+    }
+  }
+}))
+
 import { describe, it, beforeEach, vi, expect } from 'vitest'
 import { flushPromises, mount } from '@vue/test-utils'
 import App from '../BrowserAction.vue'
@@ -11,32 +37,6 @@ let sendMessageCalls: any[] = []
 beforeEach(() => {
   mockStore = {}
   sendMessageCalls = []
-
-  vi.mock('webextension-polyfill', () => ({
-    default: {
-      runtime: {
-        getURL: (val: string) => val,
-        sendMessage: (message: any) => {
-          sendMessageCalls.push(message)
-          return Promise.resolve()
-        },
-        onMessage: {
-          addListener: vi.fn()
-        }
-      },
-      storage: {
-        local: {
-          get: (key: string | string[]) => {
-            if (Array.isArray(key)) {
-              return key.reduce((acc, k) => ({ ...acc, [k]: mockStore[k] }), {})
-            }
-            return { [key]: mockStore[key] }
-          },
-          set: (val: any) => (mockStore = { ...mockStore, ...val }) // eslint-disable-line @typescript-eslint/no-explicit-any
-        }
-      }
-    }
-  }))
 })
 
 describe('browser action', () => {

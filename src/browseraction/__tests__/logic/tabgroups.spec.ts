@@ -1,3 +1,11 @@
+vi.mock('webextension-polyfill', () => ({
+  default: {
+    tabGroups: {
+      query: () => Promise.resolve([tg1, tg2, tg3])
+    }
+  }
+}))
+
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import {
   loadTabGroups,
@@ -7,23 +15,12 @@ import {
   NO_TAB_GROUP_TITLE
 } from '@/browseraction/components/logic/tabgroups'
 import browser from 'webextension-polyfill'
-import { beforeEach } from 'node:test'
 
 const tg1: Partial<browser.TabGroups.TabGroup> = { id: 1, title: 'Group 1', color: 'red' }
 const tg2: Partial<browser.TabGroups.TabGroup> = { id: 2, title: 'Group 2', color: 'blue' }
 const tg3: Partial<browser.TabGroups.TabGroup> = { id: 3, title: '', color: 'green' }
 
 describe('loads tab groups', () => {
-  beforeEach(() => {
-    vi.mock('webextension-polyfill', () => ({
-      default: {
-        tabGroups: {
-          query: () => Promise.resolve([tg1, tg2, tg3])
-        }
-      }
-    }))
-  })
-
   afterEach(() => {
     vi.resetAllMocks()
   })

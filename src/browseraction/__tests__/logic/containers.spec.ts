@@ -1,3 +1,11 @@
+vi.mock('webextension-polyfill', () => ({
+  default: {
+    contextualIdentities: {
+      query: () => Promise.resolve([c1, c2, c3])
+    }
+  }
+}))
+
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import {
   loadContainers,
@@ -6,7 +14,6 @@ import {
   NO_CONTAINER_ID,
   NO_CONTAINER_TITLE
 } from '@/browseraction/components/logic/containers'
-import { beforeEach } from 'node:test'
 import browser from 'webextension-polyfill'
 
 const c1: Partial<browser.ContextualIdentities.ContextualIdentity> = {
@@ -26,16 +33,6 @@ const c3: Partial<browser.ContextualIdentities.ContextualIdentity> = {
 }
 
 describe('loads containers', () => {
-  beforeEach(() => {
-    vi.mock('webextension-polyfill', () => ({
-      default: {
-        contextualIdentities: {
-          query: () => Promise.resolve([c1, c2, c3])
-        }
-      }
-    }))
-  })
-
   afterEach(() => {
     vi.resetAllMocks()
   })

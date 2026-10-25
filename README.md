@@ -12,7 +12,7 @@ There should be an icon in the browser's toolbar. Chrome hides extension icons b
 
 ## Building the project
 
-The project is written in [Vue.js](https://vuejs.org/) using [TypeScript](https://www.typescriptlang.org/), utilizes [Vite](https://vitejs.dev/) for bundling, [Vitest](https://vitest.dev/) for testing, [ESLint](https://eslint.org/) for linting and [Prettier](https://prettier.io/) for formatting. It requires [Node](https://nodejs.org/en/) Version >= 18 to build.
+The project is written in [Vue.js](https://vuejs.org/) using [TypeScript](https://www.typescriptlang.org/), utilizes [Vite](https://vitejs.dev/) for bundling, [Vitest](https://vitest.dev/) for testing, [ESLint](https://eslint.org/) for linting and [Prettier](https://prettier.io/) for formatting. It requires [Node](https://nodejs.org/en/) 24 (use `nvm use`) to build.
 
 Due to incompatible manifest.json definitions, there are separate builds for Firefox and Chrome.
 
@@ -20,15 +20,15 @@ First: Install packages via `npm install`.<br>
 Then use one of the following build commands:
 
 | Command                   | Description                         | Output dir                      |
-|:--------------------------|:------------------------------------|:--------------------------------|
+| :------------------------ | :---------------------------------- | :------------------------------ |
 | `npm run dev:firefox`     | live build (watch-mode) for Firefox | `dist-firefox`                  |
 | `npm run dev:chrome`      | live build (watch-mode) for Chrome  | `dist-chrome`                   |
 | `npm run build:firefox`   | production build for Firefox        | `dist-firefox`                  |
 | `npm run build:chrome`    | production build for Chrome         | `dist-chrome`                   |
 | `npm run build:all`       | production build for all browsers   | `dist-firefox`<br>`dist-chrome` |
-| `npm run package:firefox` | package for Firefox       | `dist-package`                      |
-| `npm run package:chrome`      | package for Chrome                         | `dist-package`                      |
-| `npm run package:all`         | package for all browsers   | `dist-package`     |
+| `npm run package:firefox` | package for Firefox                 | `dist-package`                  |
+| `npm run package:chrome`  | package for Chrome                  | `dist-package`                  |
+| `npm run package:all`     | package for all browsers            | `dist-package`                  |
 
 See [instructions for Chrome](https://developer.chrome.com/docs/extensions/mv3/getstarted/development-basics/#load-unpacked) and [instructions for Firefox](https://extensionworkshop.com/documentation/develop/temporary-installation-in-firefox/) on how to load an unpacked extension.
 
@@ -45,3 +45,9 @@ Have a look at the `package.json` for all run scripts.
 ## Permissions
 
 - "Storage" permission in order to save settings and user input.
+
+## Development checks
+
+Run `npm ci`, then `npx playwright install chromium` once to download a local test browser.
+`npm run check:all` runs type checking, lint, format checking, unit tests, a Chrome build, and a smoke test in a fresh Chromium profile.
+Use `HEADED=1 npm run test:e2e` to see the test browser. Checks do not modify source files; use `npm run lint:fix` or `npm run format` to apply fixes.

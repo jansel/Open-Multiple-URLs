@@ -18,16 +18,15 @@ Promise.all([
 ]).then((data) => {
   // stored options
   store.urlList = String(data[0][BrowserStorageKey.urlList] ?? '')
-  store.lazyLoadingChecked = Boolean(data[0][BrowserStorageKey.lazyload]) ?? false
-  store.loadInRandomOrderChecked = Boolean(data[0][BrowserStorageKey.random]) ?? false
-  store.loadInReverseOrderChecked = Boolean(data[0][BrowserStorageKey.reverse]) ?? false
-  store.preserveInputChecked = Boolean(data[0][BrowserStorageKey.preserve]) ?? false
-  store.deduplicateURLsChecked = Boolean(data[0][BrowserStorageKey.deduplicate]) ?? false
-  store.handleAsSearchQueryChecked =
-    Boolean(data[0][BrowserStorageKey.handleAsSearchQuery]) ?? false
+  store.lazyLoadingChecked = Boolean(data[0][BrowserStorageKey.lazyload])
+  store.loadInRandomOrderChecked = Boolean(data[0][BrowserStorageKey.random])
+  store.loadInReverseOrderChecked = Boolean(data[0][BrowserStorageKey.reverse])
+  store.preserveInputChecked = Boolean(data[0][BrowserStorageKey.preserve])
+  store.deduplicateURLsChecked = Boolean(data[0][BrowserStorageKey.deduplicate])
+  store.handleAsSearchQueryChecked = Boolean(data[0][BrowserStorageKey.handleAsSearchQuery])
 
   // tab groups (Chrome only)
-  store.hasTabGroupSupport = Boolean(browser.tabGroups) ?? false
+  store.hasTabGroupSupport = Boolean(browser.tabGroups)
   store.tabGroups = data[1]
   store.selectedTabGroupId =
     store.tabGroups.find(
