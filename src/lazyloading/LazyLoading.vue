@@ -1,52 +1,52 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import { onMounted, onBeforeUnmount } from 'vue'
+import browser from 'webextension-polyfill'
+import { canLazyLoad, hasValidSchema } from '../browseraction/components/logic/urlschema'
+
+const url = window.location.hash.substring(1)
+const canNavigate = hasValidSchema(url) && canLazyLoad(url)
+let navigating = false
+
+async function navigateIfSelected() {
+  // Focus/visibility can briefly change while Chromium initializes a background tab.
+  // Chrome's active flag is the authority for whether this tab was selected.
+  if (!canNavigate || navigating) return
+  try {
+    const tab = await browser.tabs.getCurrent()
+    if (tab?.active && !navigating) {
+      navigating = true
+      window.location.replace(url)
+    }
+  } catch (error) {
+    console.error('Could not check whether this tab is selected', error)
+  }
+}
+
+onMounted(() => {
+  let title = url
+  try {
+    const parsedUrl = new URL(url)
+    const hostname = parsedUrl.hostname.replace(/^www\./, '')
+    title = `${hostname}${parsedUrl.pathname}`.replace(/\/$/, '')
+  } catch {
+    // Keep the original text if it cannot be parsed as a URL.
+  }
+  document.title = `[${title}]`
+
+  // Never execute active content from a URL fragment inside an extension page.
+  if (!canNavigate) return
+  window.addEventListener('focus', navigateIfSelected)
+  document.addEventListener('visibilitychange', navigateIfSelected)
+  // A quickly selected tab may already be active before this script runs.
+  void navigateIfSelected()
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('focus', navigateIfSelected)
+  document.removeEventListener('visibilitychange', navigateIfSelected)
+})
+</script>
 
 <template>
   <div></div>
 </template>
-
-<script lang="ts">
-import { canLazyLoad, hasValidSchema } from '../browseraction/components/logic/urlschema'
-export default {
-  methods: {
-    init: () => {
-      const url = window.location.hash.substring(1)
-
-      let docTitle = url
-      try {
-        const parsedUrl = new URL(url)
-
-        let hostname = parsedUrl.hostname
-        if (hostname.startsWith('www.')) {
-          hostname = hostname.substring(4)
-        }
-
-        let path = `${hostname}${parsedUrl.pathname}`
-        if (path.endsWith('/')) {
-          path = path.substring(0, path.length - 1)
-        }
-
-        docTitle = path
-      } catch (e) {
-        console.error(e)
-      }
-      document.title = `[${docTitle}]`
-
-      // Never execute active content from a URL fragment inside an extension page.
-      if (!hasValidSchema(url) || !canLazyLoad(url)) return
-
-      const navigate = () => window.location.replace(url)
-      window.addEventListener('focus', navigate, { once: true })
-      document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'visible') navigate()
-      })
-      // A quickly selected tab may already be focused before this script runs.
-      if (document.hasFocus() && document.visibilityState === 'visible') navigate()
-    }
-  },
-  beforeMount() {
-    this.init()
-  }
-}
-</script>
-
-<style scoped></style>

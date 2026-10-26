@@ -8,6 +8,7 @@ import { store } from '@/browseraction/components/store/store'
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { NO_TAB_GROUP_ID, loadTabGroups } from './components/logic/tabgroups'
 import { NO_CONTAINER_ID, loadContainers, hasContainerSupport } from './components/logic/containers'
+import { parseUrlOrder } from './components/logic/order'
 
 const isStoredValuesLoaded = ref(false)
 const loadError = ref('')
@@ -18,16 +19,14 @@ Promise.all([
   loadContainers()
 ])
   .then((data) => {
-    // stored options
+    store.storageError = ''
+    store.lazyLoadingChecked = Boolean(data[0][BrowserStorageKey.lazyload] ?? false)
+    store.order = parseUrlOrder(data[0][BrowserStorageKey.order])
     store.preserveInputChecked = Boolean(data[0][BrowserStorageKey.preserve] ?? true)
+    store.deduplicateURLsChecked = Boolean(data[0][BrowserStorageKey.deduplicate] ?? true)
     store.urlList = store.preserveInputChecked
       ? String(data[0][BrowserStorageKey.urlList] ?? '')
       : ''
-    store.lazyLoadingChecked = Boolean(data[0][BrowserStorageKey.lazyload])
-    store.loadInRandomOrderChecked = Boolean(data[0][BrowserStorageKey.random])
-    store.loadInReverseOrderChecked = Boolean(data[0][BrowserStorageKey.reverse])
-    store.deduplicateURLsChecked = Boolean(data[0][BrowserStorageKey.deduplicate])
-    store.handleAsSearchQueryChecked = Boolean(data[0][BrowserStorageKey.handleAsSearchQuery])
 
     // tab groups (Chrome only)
     store.hasTabGroupSupport = Boolean(browser.tabGroups)
@@ -62,8 +61,12 @@ async function refreshGroups() {
     // Keep the current selection if Chrome is temporarily unavailable.
   }
 }
-onMounted(() => window.addEventListener('focus', refreshGroups))
-onBeforeUnmount(() => window.removeEventListener('focus', refreshGroups))
+onMounted(() => {
+  window.addEventListener('focus', refreshGroups)
+})
+onBeforeUnmount(() => {
+  window.removeEventListener('focus', refreshGroups)
+})
 </script>
 
 <template>
@@ -75,6 +78,7 @@ onBeforeUnmount(() => window.removeEventListener('focus', refreshGroups))
         <p>A place for your links. Paste, organize, and open them together.</p>
       </div>
     </header>
+    <p v-if="store.storageError" role="alert" class="error-message">{{ store.storageError }}</p>
     <p v-if="loadError" role="alert" class="error-message">{{ loadError }}</p>
     <div v-else-if="isStoredValuesLoaded" class="workspace-grid">
       <section class="editor-panel" aria-label="URL workspace">

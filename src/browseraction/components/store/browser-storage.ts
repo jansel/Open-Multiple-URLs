@@ -1,11 +1,9 @@
 export enum BrowserStorageKey {
   urlList = 'txt',
   lazyload = 'lazyload',
-  random = 'random',
-  reverse = 'reverse',
+  order = 'order',
   preserve = 'preserve',
   deduplicate = 'deduplicate',
-  handleAsSearchQuery = 'handleAsSearchQuery',
   selectedTabGroupId = 'selectedTabGroupId',
   selectedContainerId = 'selectedContainerId'
 }

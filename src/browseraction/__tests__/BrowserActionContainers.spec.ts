@@ -17,20 +17,25 @@ vi.mock('webextension-polyfill', () => ({
     },
     storage: {
       local: {
+        remove: async (key: string) => {
+          delete mockStore[key]
+        },
         get: (key: string | string[]) => {
           if (Array.isArray(key)) {
             return key.reduce((acc, k) => ({ ...acc, [k]: mockStore[k] }), {})
           }
           return { [key]: mockStore[key] }
         },
-        set: (val: any) => (mockStore = { ...mockStore, ...val })
+        set: async (val: any) => {
+          mockStore = { ...mockStore, ...val }
+        }
       }
     }
   }
 }))
 
-import { describe, it, beforeEach, vi, expect } from 'vitest'
-import { flushPromises, mount } from '@vue/test-utils'
+import { describe, it, beforeEach, afterEach, vi, expect } from 'vitest'
+import { flushPromises, mount, enableAutoUnmount } from '@vue/test-utils'
 import App from '../BrowserAction.vue'
 import { BrowserStorageKey } from '../components/store/browser-storage'
 import {
@@ -44,7 +49,9 @@ import { NEW_TAB_GROUP_TITLE, NO_TAB_GROUP_TITLE } from '../components/logic/tab
 const MOCK_CONTAINER_ID = '123'
 const MOCK_CONTAINER_NAME = 'Mock Container'
 
-let mockStore: Record<string, string> = {}
+enableAutoUnmount(afterEach)
+
+let mockStore: Record<string, unknown> = {}
 let sendMessageCalls: any[] = []
 beforeEach(() => {
   mockStore = {}
@@ -64,11 +71,12 @@ describe('browser action', () => {
     expect(wrapper.text()).not.toContain(NEW_TAB_GROUP_TITLE)
     expect(wrapper.text()).toContain('Extract URLs from text')
     expect(wrapper.text()).toContain('Do not load tabs until selected')
-    expect(wrapper.text()).toContain('Load in random order')
-    expect(wrapper.text()).toContain('Load in reverse order')
+    expect(wrapper.get('#order').text()).toContain('Original')
+    expect(wrapper.get('#order').text()).toContain('Reverse')
+    expect(wrapper.get('#order').text()).toContain('Random')
     expect(wrapper.text()).toContain('Preserve input')
     expect(wrapper.text()).toContain('Ignore duplicate URLs')
-    expect(wrapper.text()).toContain('Handle Non-URLs as search queries')
+    expect(wrapper.find('#searchquery').exists()).toBe(false)
   })
 
   describe('features', () => {
@@ -86,11 +94,9 @@ describe('browser action', () => {
       expect(sendMessageCalls).toHaveLength(1)
       expect(sendMessageCalls[0]).toEqual({
         action: 'loadSites',
-        deduplicate: false,
-        handleAsSearchQuery: false,
+        deduplicate: true,
         lazyloading: false,
-        random: false,
-        reverse: false,
+        order: 'original',
         selectedContainerId: 'NEW_CONTAINER_ID',
         selectedTabGroupId: -1,
         text: 'https://github.com\nhttps://github.com/htrinter/'
@@ -111,11 +117,9 @@ describe('browser action', () => {
       expect(sendMessageCalls).toHaveLength(1)
       expect(sendMessageCalls[0]).toEqual({
         action: 'loadSites',
-        deduplicate: false,
-        handleAsSearchQuery: false,
+        deduplicate: true,
         lazyloading: false,
-        random: false,
-        reverse: false,
+        order: 'original',
         selectedContainerId: '123',
         selectedTabGroupId: -1,
         text: 'https://github.com\nhttps://github.com/htrinter/'

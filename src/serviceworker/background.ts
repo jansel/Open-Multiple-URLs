@@ -18,10 +18,8 @@ export const loadSitesListener = async (
     return loadSites(
       loadSitesMessage.text,
       loadSitesMessage.lazyloading,
-      loadSitesMessage.random,
-      loadSitesMessage.reverse,
+      loadSitesMessage.order,
       loadSitesMessage.deduplicate,
-      loadSitesMessage.handleAsSearchQuery,
       loadSitesMessage.selectedTabGroupId,
       loadSitesMessage.selectedContainerId,
       sender?.tab?.windowId

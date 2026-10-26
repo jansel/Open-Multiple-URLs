@@ -1,7 +1,8 @@
 vi.mock('webextension-polyfill', () => ({
   default: {
     tabGroups: {
-      query: () => Promise.resolve([{ id: MOCK_TAB_GROUP_ID, title: MOCK_TAB_GROUP_TITLE }])
+      query: () =>
+        Promise.resolve([{ id: MOCK_TAB_GROUP_ID, title: MOCK_TAB_GROUP_TITLE, color: 'blue' }])
     },
     runtime: {
       getURL: (val: string) => val,
@@ -15,20 +16,25 @@ vi.mock('webextension-polyfill', () => ({
     },
     storage: {
       local: {
+        remove: async (key: string) => {
+          delete mockStore[key]
+        },
         get: (key: string | string[]) => {
           if (Array.isArray(key)) {
             return key.reduce((acc, k) => ({ ...acc, [k]: mockStore[k] }), {})
           }
           return { [key]: mockStore[key] }
         },
-        set: (val: any) => (mockStore = { ...mockStore, ...val })
+        set: async (val: any) => {
+          mockStore = { ...mockStore, ...val }
+        }
       }
     }
   }
 }))
 
-import { describe, it, beforeEach, vi, expect } from 'vitest'
-import { flushPromises, mount } from '@vue/test-utils'
+import { describe, it, beforeEach, afterEach, vi, expect } from 'vitest'
+import { flushPromises, mount, enableAutoUnmount } from '@vue/test-utils'
 import App from '../BrowserAction.vue'
 import { BrowserStorageKey } from '../components/store/browser-storage'
 import {
@@ -42,7 +48,9 @@ import { NEW_CONTAINER_TITLE, NO_CONTAINER_TITLE } from '../components/logic/con
 const MOCK_TAB_GROUP_ID = 123
 const MOCK_TAB_GROUP_TITLE = 'Mock Tab Group'
 
-let mockStore: Record<string, string> = {}
+enableAutoUnmount(afterEach)
+
+let mockStore: Record<string, unknown> = {}
 let sendMessageCalls: any[] = []
 
 beforeEach(() => {
@@ -63,11 +71,12 @@ describe('browser action', () => {
     expect(wrapper.text()).not.toContain(NEW_CONTAINER_TITLE)
     expect(wrapper.text()).toContain('Extract URLs from text')
     expect(wrapper.text()).toContain('Do not load tabs until selected')
-    expect(wrapper.text()).toContain('Load in random order')
-    expect(wrapper.text()).toContain('Load in reverse order')
+    expect(wrapper.get('#order').text()).toContain('Original')
+    expect(wrapper.get('#order').text()).toContain('Reverse')
+    expect(wrapper.get('#order').text()).toContain('Random')
     expect(wrapper.text()).toContain('Preserve input')
     expect(wrapper.text()).toContain('Ignore duplicate URLs')
-    expect(wrapper.text()).toContain('Handle Non-URLs as search queries')
+    expect(wrapper.find('#searchquery').exists()).toBe(false)
   })
 
   describe('features', () => {
@@ -85,11 +94,9 @@ describe('browser action', () => {
       expect(sendMessageCalls).toHaveLength(1)
       expect(sendMessageCalls[0]).toEqual({
         action: 'loadSites',
-        deduplicate: false,
-        handleAsSearchQuery: false,
+        deduplicate: true,
         lazyloading: false,
-        random: false,
-        reverse: false,
+        order: 'original',
         selectedContainerId: 'NO_CONTAINER_ID',
         selectedTabGroupId: -2,
         text: 'https://github.com\nhttps://github.com/htrinter/'
@@ -110,11 +117,9 @@ describe('browser action', () => {
       expect(sendMessageCalls).toHaveLength(1)
       expect(sendMessageCalls[0]).toEqual({
         action: 'loadSites',
-        deduplicate: false,
-        handleAsSearchQuery: false,
+        deduplicate: true,
         lazyloading: false,
-        random: false,
-        reverse: false,
+        order: 'original',
         selectedContainerId: 'NO_CONTAINER_ID',
         selectedTabGroupId: 123,
         text: 'https://github.com\nhttps://github.com/htrinter/'
@@ -136,11 +141,6 @@ describe('browser action', () => {
         storeKey: BrowserStorageKey.selectedTabGroupId,
         value: String(MOCK_TAB_GROUP_ID),
         expectedStates: {
-          lazyLoad: false,
-          random: false,
-          reverse: false,
-          preserve: false,
-          deduplicate: false,
           selectedTabGroupId: MOCK_TAB_GROUP_ID
         }
       }
@@ -148,9 +148,7 @@ describe('browser action', () => {
     it.each(renderWithStoredValuesTestCases)(
       'renders with stored $storeKey',
       async ({ storeKey, value, expectedStates }) => {
-        mockStore = {
-          [storeKey]: value
-        }
+        mockStore = { [storeKey]: value }
 
         const wrapper = mount(App)
         await flushPromises()

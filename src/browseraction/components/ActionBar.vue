@@ -1,6 +1,7 @@
 <template>
   <section id="action-bar">
     <button id="extract" @click="setUrlListInputData">Extract URLs from text</button>
+    <button id="clear" :disabled="opening || !hasInput" @click="clearInput">Clear</button>
     <button id="open" :disabled="opening || tabCount === 0" @click="openURLs">
       <strong>
         Open URLs <span v-if="tabCount > 0">({{ tabCount }})</span>
@@ -64,10 +65,8 @@ export default {
         action: 'loadSites',
         text: store.urlList,
         lazyloading: store.lazyLoadingChecked,
-        random: store.loadInRandomOrderChecked,
-        reverse: store.loadInReverseOrderChecked,
+        order: store.order,
         deduplicate: store.deduplicateURLsChecked,
-        handleAsSearchQuery: store.handleAsSearchQueryChecked,
         selectedTabGroupId: this.selectedTabGroupId,
         selectedContainerId: this.selectedContainerId
       }
@@ -87,6 +86,11 @@ export default {
     setUrlListInputData() {
       store.setUrlList(extractURLs(store.urlList))
     },
+    clearInput() {
+      store.clearUrlList()
+      this.status = ''
+      document.getElementById('urls')?.focus()
+    },
     setContainerSelection() {
       this.$nextTick(() => {
         store.setSelectedContainerId(this.selectedContainerId)
@@ -94,6 +98,9 @@ export default {
     }
   },
   computed: {
+    hasInput() {
+      return store.urlList.length > 0
+    },
     selectedTabGroupId: {
       get() {
         return store.selectedTabGroupId

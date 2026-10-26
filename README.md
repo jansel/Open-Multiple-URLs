@@ -5,6 +5,8 @@ This is [Jason Ansel's independent fork](https://github.com/jansel/Open-Multiple
 [htrinter/Open-Multiple-URLs](https://github.com/htrinter/Open-Multiple-URLs), based on upstream 1.7.5.
 It has its own releases and is not intended to merge upstream.
 
+This checkout contains **unreleased 2.1.0** changes. The submitted store package is still 2.0.0.
+
 ![Open Multiple URLs Tab](docs/store/screenshot-light.png)
 
 ## What is different
@@ -12,10 +14,12 @@ It has its own releases and is not intended to merge upstream.
 - The toolbar button opens a full browser tab. Click again to return to the existing workspace in that window.
 - Pasting into an empty input, or over all selected text, automatically extracts URLs. A partial selection or insertion leaves the pasted text unchanged. If no URLs are found, the original text is kept.
 - The page stays open after opening URLs. Your input is remembered locally by default; turn off **Preserve input** to stop saving it between visits.
+- **Ignore duplicate URLs** is enabled by default. Choose **Original**, **Reverse**, or **Random** from the **Order** dropdown.
+- **Clear** empties the current list and its saved copy, ready for your next paste.
 - A responsive layout supports light and dark themes.
 - The toolchain and dependencies are updated, with unit tests and automated tests of the built extension in fresh Chromium profiles.
 
-The upstream options for lazy loading, deduplication, random/reverse order, Chrome tab groups, and optional search queries are retained. Firefox builds are no longer supported by this fork.
+The upstream options for lazy loading, deduplication, random/reverse order, and Chrome tab groups are retained. Search-query handling and Firefox builds are no longer supported by this fork.
 
 ## Install
 
@@ -28,15 +32,15 @@ For local installation:
 3. Open `chrome://extensions`, enable **Developer mode**, choose **Load unpacked**, and select `dist-chrome`.
 4. Pin **Open Multiple URLs Tab** in the browser's extensions menu.
 
-Store installation on other computers installs the extension, but your input and settings remain local to each browser profile.
+Settings, tab-group choices, and saved input are local to each browser profile.
 
 ## Use
 
-Click the toolbar icon, paste a list or text containing links, then click **Open URLs**. Each nonempty line becomes one tab; addresses without a scheme get `http://` added. If **Handle Non-URLs as search queries** is enabled, lines without a URL scheme are sent to your browser's default search provider instead.
+Click the toolbar icon, paste a list or text containing links, then click **Open URLs**. Each nonempty line becomes one tab; addresses without a scheme get `http://` added. Lines are never sent to a search provider by the extension.
 
-Automatic extraction runs only on a paste that replaces the entire field (including an empty field). Use **Extract URLs from text** whenever you want to extract manually. Extraction recognizes explicit schemes such as `https://`, `www.` addresses, and certain domain/path forms; plain bare domains or search text with no recognizable links are kept as entered. If a paste mixes recognizable links with other text, only the extracted links remain.
+Automatic extraction runs only on a paste that replaces the entire field (including an empty field). Use **Extract URLs from text** whenever you want to extract manually. Extraction recognizes explicit schemes such as `https://`, `www.` addresses, and certain domain/path forms; plain bare domains or text with no recognizable links are kept as entered. If a paste mixes recognizable links with other text, only the extracted links remain.
 
-**Do not load tabs until selected** opens placeholder tabs that navigate when selected. Browser-internal pages, file URLs, active-content URLs, and searches cannot be deferred. **Ignore duplicate URLs** compares input lines exactly. Tab groups are scoped to the current window and refreshed when the workspace regains focus.
+**Do not load tabs until selected** opens placeholder tabs that navigate when selected. Browser-internal pages, file URLs, and active-content URLs cannot be deferred. **Ignore duplicate URLs**, enabled by default, compares input lines exactly. **Order** selects the original input order, its reverse, or a random order. Tab groups are scoped to the current window and refreshed when the workspace regains focus.
 
 ## Development
 
@@ -66,11 +70,10 @@ Checks never modify source files. CI runs the complete check suite and uploads t
 
 ## Permissions and privacy
 
-- **storage** remembers settings and, when enabled, your input on this device.
+- **storage** saves settings, input, and tab-group selection locally in the browser profile.
 - **tabGroups** lists groups in the current window and places newly opened tabs into your chosen group.
-- **search** sends non-URL lines to the browser's default search provider only when that option is enabled and you click Open URLs.
 
-The extension requests no website host permissions, browsing-history access, or clipboard-reading permission. It uses only the text you type or paste into its own page. There are no analytics, accounts, advertising, or remotely loaded code. See [PRIVACY.md](PRIVACY.md).
+The extension requests no website host permissions, browsing-history access, clipboard-reading permission, or search permission. It uses only the text you type or paste into its own page. There are no analytics, extension accounts, advertising, or remotely loaded code. See the [2.1.0 privacy-policy draft](docs/PRIVACY-2.1.md); [PRIVACY.md](PRIVACY.md) continues to describe the submitted 2.0.0 package until the next release.
 
 ## Attribution and license
 

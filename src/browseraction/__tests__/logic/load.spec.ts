@@ -16,9 +16,6 @@ vi.mock('webextension-polyfill', () => ({
       create: tabCreateMock,
       group: vi.fn()
     },
-    search: {
-      query: vi.fn()
-    },
     contextualIdentities: {
       create: (props: any) => {
         ciCreateMock(props)
@@ -42,7 +39,7 @@ describe('load tabs', () => {
   })
 
   it('loads tabs in sequence', async () => {
-    await loadSites(urlList, false, false, false, false, false, null)
+    await loadSites(urlList, false, 'original', false, null)
 
     expect(tabCreateMock).toHaveBeenNthCalledWith(1, {
       url: url1,
@@ -57,7 +54,7 @@ describe('load tabs', () => {
   })
 
   it('lazy loads tabs', async () => {
-    await loadSites(urlList, true, false, false, false, false, null)
+    await loadSites(urlList, true, 'original', false, null)
 
     expect(tabCreateMock).toHaveBeenCalledWith({
       url: 'lazyloading.html#' + url1,
@@ -71,13 +68,15 @@ describe('load tabs', () => {
   })
 
   it('loads tabs in random order', async () => {
-    await loadSites(urlList, false, true, false, false, false, null)
-
-    expect(tabCreateMock).toHaveBeenCalledTimes(2)
+    const random = vi.spyOn(Math, 'random').mockReturnValue(0)
+    const thirdUrl = 'https://example.org'
+    await loadSites(`${urlList}\n${thirdUrl}`, false, 'random', false, null)
+    expect(tabCreateMock.mock.calls.map(([props]) => props.url)).toEqual([url2, thirdUrl, url1])
+    random.mockRestore()
   })
 
   it('loads tabs in reverse order', async () => {
-    await loadSites(urlList, false, false, true, false, false, null)
+    await loadSites(urlList, false, 'reverse', false, null)
 
     expect(tabCreateMock).toHaveBeenNthCalledWith(1, {
       url: url2,
@@ -91,15 +90,7 @@ describe('load tabs', () => {
   })
 
   it('loads tabs and deduplicate', async () => {
-    await loadSites(
-      `${urlList}\n${urlList}\n${urlList}\n${urlList}`,
-      false,
-      false,
-      false,
-      true,
-      false,
-      null
-    )
+    await loadSites(`${urlList}\n${urlList}\n${urlList}\n${urlList}`, false, 'original', true, null)
 
     expect(tabCreateMock).toHaveBeenNthCalledWith(1, {
       url: url1,
@@ -113,7 +104,7 @@ describe('load tabs', () => {
   })
 
   it('prepends http protocol if protocol does not exist', async () => {
-    await loadSites('test.de', false, false, true, false, false, null)
+    await loadSites('test.de', false, 'reverse', false, null)
 
     expect(tabCreateMock).toHaveBeenNthCalledWith(1, {
       url: 'http://test.de',
@@ -144,35 +135,35 @@ describe('load tabs', () => {
   })
 
   it('loads tabs without tab group', async () => {
-    await loadSites(urlList, false, false, false, false, false, NO_TAB_GROUP_ID)
+    await loadSites(urlList, false, 'original', false, NO_TAB_GROUP_ID)
 
     expect(tabCreateMock).toHaveBeenCalledTimes(2)
     expect(browser.tabs.group).not.toHaveBeenCalled()
   })
 
   it('loads tabs to new tab group', async () => {
-    await loadSites(urlList, false, false, false, false, false, NEW_TAB_GROUP_ID)
+    await loadSites(urlList, false, 'original', false, NEW_TAB_GROUP_ID)
 
     expect(tabCreateMock).toHaveBeenCalledTimes(2)
     expect(browser.tabs.group).toBeCalledWith({ tabIds: [42, 42] })
   })
 
   it('loads tabs to existing tab group', async () => {
-    await loadSites(urlList, false, false, false, false, false, MOCK_TAB_GROUP_ID)
+    await loadSites(urlList, false, 'original', false, MOCK_TAB_GROUP_ID)
 
     expect(tabCreateMock).toHaveBeenCalledTimes(2)
     expect(browser.tabs.group).toBeCalledWith({ tabIds: [42, 42], groupId: MOCK_TAB_GROUP_ID })
   })
 
   it('loads tabs without container', async () => {
-    await loadSites(urlList, false, false, false, false, false, undefined, NO_CONTAINER_ID)
+    await loadSites(urlList, false, 'original', false, undefined, NO_CONTAINER_ID)
 
     expect(tabCreateMock).toHaveBeenCalledTimes(2)
     expect(ciCreateMock).not.toHaveBeenCalled()
   })
 
   it('loads tabs to new container', async () => {
-    await loadSites(urlList, false, false, false, false, false, undefined, NEW_CONTAINER_ID)
+    await loadSites(urlList, false, 'original', false, undefined, NEW_CONTAINER_ID)
 
     expect(tabCreateMock).toHaveBeenCalledTimes(2)
     expect(tabCreateMock).toHaveBeenCalledWith({
@@ -184,41 +175,28 @@ describe('load tabs', () => {
   })
 
   it('loads tabs to existing container', async () => {
-    await loadSites(urlList, false, false, false, false, false, undefined, MOCK_CONTAINER_ID)
+    await loadSites(urlList, false, 'original', false, undefined, MOCK_CONTAINER_ID)
 
     expect(tabCreateMock).toHaveBeenCalledTimes(2)
     expect(ciCreateMock).not.toHaveBeenCalled()
   })
 
-  it('handles non-url as search query', async () => {
-    await loadSites(urlList + '\ntest', false, false, false, false, true, null)
-
-    expect(tabCreateMock).toHaveBeenCalledTimes(3)
-    expect(browser.search.query).toBeCalledWith({ text: 'test', tabId: 42 })
-  })
-
-  it('does not handle non-url as search query', async () => {
-    await loadSites(urlList + '\ntest', false, false, false, false, false, null)
-
-    expect(tabCreateMock).toHaveBeenCalledTimes(3)
-    expect(browser.search.query).not.toHaveBeenCalled()
-  })
   it('keeps opening tabs in the originating window', async () => {
-    await loadSites(urlList, false, false, false, false, false, null, null, 17)
+    await loadSites(urlList, false, 'original', false, null, null, 17)
     expect(tabCreateMock).toHaveBeenCalledWith({ url: url1, active: false, windowId: 17 })
   })
 
   it('reports failures and continues with valid URLs', async () => {
     const log = vi.spyOn(console, 'error').mockImplementation(() => {})
     tabCreateMock.mockRejectedValueOnce(new Error('Invalid URL'))
-    const result = await loadSites(urlList, false, false, false, false, false)
+    const result = await loadSites(urlList, false, 'original', false)
     expect(result).toEqual({ opened: 1, failed: 1 })
     expect(tabCreateMock).toHaveBeenCalledTimes(2)
     log.mockRestore()
   })
 
   it('does not create an empty group', async () => {
-    await loadSites('', false, false, false, false, false, NEW_TAB_GROUP_ID)
+    await loadSites('', false, 'original', false, NEW_TAB_GROUP_ID)
     expect(browser.tabs.group).not.toHaveBeenCalled()
   })
 })

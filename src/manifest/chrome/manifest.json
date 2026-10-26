@@ -20,7 +20,7 @@
   "commands": {
     "_execute_action": {}
   },
-  "permissions": ["storage", "tabGroups", "search"],
+  "permissions": ["storage", "tabGroups"],
   "incognito": "split",
   "minimum_chrome_version": "111"
 }

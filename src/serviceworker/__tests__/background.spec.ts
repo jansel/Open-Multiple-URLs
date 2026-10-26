@@ -1,6 +1,7 @@
 import browser from 'webextension-polyfill'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { loadSitesListener } from '@/serviceworker/background'
+import { loadSites } from '@/browseraction/components/logic/load'
 
 vi.mock('webextension-polyfill', () => ({
   default: {
@@ -28,16 +29,23 @@ describe('background script', () => {
       action: 'loadSites',
       text: 'example.com',
       lazyloading: true,
-      random: false,
-      reverse: false,
+      order: 'reverse',
       deduplicate: true,
-      handleAsSearchQuery: false,
-      selectedTabGroupId: 'group1',
+      selectedTabGroupId: 42,
       selectedContainerId: 'container1'
     }
 
     const result = await loadSitesListener(message)
     expect(result).toBe(true)
+    expect(loadSites).toHaveBeenCalledWith(
+      'example.com',
+      true,
+      'reverse',
+      true,
+      42,
+      'container1',
+      undefined
+    )
   })
 
   it('dismisses unknown actions', async () => {

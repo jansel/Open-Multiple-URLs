@@ -17,7 +17,7 @@ function handleInput(event: Event) {
   const input = event.target as HTMLTextAreaElement
   const shouldExtract = replacesAllOnPaste && (event as InputEvent).inputType === 'insertFromPaste'
   replacesAllOnPaste = false
-  // Keep plain text (including search queries) when extraction finds nothing.
+  // Keep the original text when extraction finds nothing.
   store.setUrlList(shouldExtract ? extractURLs(input.value) || input.value : input.value)
 }
 </script>

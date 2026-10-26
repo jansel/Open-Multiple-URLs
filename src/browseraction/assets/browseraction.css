@@ -136,7 +136,8 @@ button:disabled {
   order: -1;
   max-width: 100%;
 }
-#extract {
+#extract,
+#clear {
   font-size: 12px;
 }
 #tabcount {
@@ -250,4 +251,13 @@ footer {
 .editor-panel,
 .options-panel {
   min-width: 0;
+}
+
+.order-label {
+  display: block;
+  margin: 16px 0 6px;
+  font-size: 13px;
+}
+#order {
+  width: 100%;
 }

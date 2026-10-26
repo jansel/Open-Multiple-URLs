@@ -5,7 +5,7 @@ import { store } from '../components/store/store'
 import browser from 'webextension-polyfill'
 
 vi.mock('webextension-polyfill', () => ({
-  default: { storage: { local: { set: vi.fn() } } }
+  default: { storage: { local: { set: vi.fn().mockResolvedValue(undefined) } } }
 }))
 
 beforeEach(() => {

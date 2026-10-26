@@ -1,6 +1,6 @@
 {
   "name": "open-multiple-urls-tab",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "private": true,
   "scripts": {
     "build": "npm run type-check && vite build",

@@ -4,9 +4,9 @@ This fork must be published as a **new extension**, under your own Google develo
 
 ## Build a release
 
-1. Update `package.json` with a new Chrome-compatible version and add its changes to `CHANGELOG.md`. Version 2.0.0 is this fork's first release.
+1. Update `package.json` with a new Chrome-compatible version and add its changes to `CHANGELOG.md`. Version 2.1.0 is currently unreleased; 2.0.0 is the package submitted for review.
 2. Run `npm ci`, `npx playwright install chromium`, and `npm run check:all`.
-3. Run `npm run package:chrome`. For 2.0.0, upload `dist-package/open-multiple-urls-tab-2.0.0-chrome.zip`. The manifest is at the ZIP root, and the GPL license is included.
+3. Run `npm run package:chrome`. For 2.1.0, the output is `dist-package/open-multiple-urls-tab-2.1.0-chrome.zip`. The manifest is at the ZIP root, and the GPL license is included.
 4. Run `npm run screenshots` if the interface changed. Review the PNGs in `docs/store`.
 5. Commit and push the corresponding source and documentation to your GitHub fork. The local agent commits logical chunks but does not push automatically.
 
@@ -28,7 +28,13 @@ Current store URL: https://chromewebstore.google.com/detail/legkeidpegglajidbdpi
 
 Version 2.0.0 was submitted on **October 25, 2026** and is **pending review**. It will publish automatically after approval with **Unlisted** visibility, free of charge, in all regions. The listing, icon, light/dark screenshots, privacy disclosures, and reviewer instructions are saved. The privacy policy is publicly reachable and the publisher's contact email is verified. The store link will become installable after approval.
 
-## Listing copy
+## Next release: 2.1.0
+
+Hold this release until 2.0.0 is approved and publication is requested. Do not cancel or replace the pending submission. The code, screenshots, and copy below describe 2.1.0; none have been uploaded to the dashboard.
+
+At release time, publish [PRIVACY-2.1.md](PRIVACY-2.1.md) as the active `PRIVACY.md`, set its effective date, and update the store privacy disclosures. Until then, preserve `PRIVACY.md` and its public URL for 2.0.0. Remove the search justification and search feature from the listing, describe the new defaults, Clear button, and Order dropdown, and upload refreshed screenshots. Verify the built manifest requests only `storage` and `tabGroups`.
+
+## Listing copy for 2.1.0
 
 **Name:** Open Multiple URLs Tab
 
@@ -49,13 +55,14 @@ Features:
 - Open one URL per line in background tabs.
 - Keep your workspace and remember input locally between visits.
 - Extract links automatically on full-field paste.
-- Ignore duplicate URLs, reverse the order, or randomize it.
+- Ignore duplicate URLs by default; choose Original, Reverse, or Random from the Order dropdown.
 - Defer supported pages until their tabs are selected.
 - Open links in a new or existing Chrome tab group.
-- Optionally send non-URL lines to your browser's default search provider.
+- Clear the input and its saved copy with one click.
+- Keep all settings, URL lists, and tab-group choices local to the browser profile.
 - Use a roomy interface with light and dark themes.
 
-No analytics, advertising, account, or remote code. Text extraction happens on your device. Opening a URL or performing a search uses your browser normally.
+No analytics, advertising, extension account, or remote code. Text extraction happens on your device. Opening a URL uses your browser normally.
 
 An independent GPL-licensed fork of Open Multiple URLs by htrinter and contributors, focused on a persistent tab interface for Chrome and Chromium browsers.
 
@@ -67,15 +74,13 @@ An independent GPL-licensed fork of Open Multiple URLs by htrinter and contribut
 
 **Single purpose:** Open user-provided lists of URLs in browser tabs from a persistent workspace, including extracting URLs from pasted text and choosing how those tabs open.
 
-**storage:** Saves the user's opening preferences and, when Preserve input is enabled, the text entered into the extension. Data stays in local extension storage on the user's device and is not sent to the developer.
+**storage:** Saves settings and tab-group selection locally. Preserve input is enabled by default and saves the URL list locally between visits. Turning it off or clicking Clear erases the saved text. No data is sent to the developer.
 
 **tabGroups:** Lists tab groups in the current window so the user can choose one, and places newly opened tabs into that group or a new group.
 
-**search:** When the user enables Handle Non-URLs as search queries and clicks Open URLs, sends lines without a URL scheme to the browser's configured default search provider.
-
 **Remote code:** No. All executable code is included in the extension package.
 
-**Data collection:** The developer collects no user data. Input and settings are processed/stored locally; requested navigation and optional searches use the browser's ordinary destination websites and search provider. Review the dashboard's certifications against `PRIVACY.md` before submitting.
+**Data collection:** The developer collects no user data. Settings and input stay local to the browser profile; requested navigation uses the browser's ordinary destination websites. Review the dashboard's certifications against the updated privacy policy before submitting.
 
 ## Updating an existing listing
 
