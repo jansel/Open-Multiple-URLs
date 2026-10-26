@@ -4,7 +4,12 @@ import browser from 'webextension-polyfill'
 import App from '../LazyLoading.vue'
 
 vi.mock('webextension-polyfill', () => ({
-  default: { tabs: { getCurrent: vi.fn() } }
+  default: {
+    tabs: {
+      getCurrent: vi.fn(),
+      onActivated: { addListener: vi.fn(), removeListener: vi.fn() }
+    }
+  }
 }))
 
 enableAutoUnmount(afterEach)
@@ -68,6 +73,21 @@ describe('lazy loading', () => {
     mount(App)
     await flushPromises()
     expect(window.location.replace).toHaveBeenCalledWith('https://example.com')
+  })
+
+  it('handles activation that finishes after the focus event', async () => {
+    vi.stubGlobal('location', { hash: '#https://example.com', replace: vi.fn() })
+    const wrapper = mount(App)
+    window.dispatchEvent(new Event('focus'))
+    await flushPromises()
+    expect(window.location.replace).not.toHaveBeenCalled()
+    vi.mocked(browser.tabs.getCurrent).mockResolvedValue({ active: true } as browser.Tabs.Tab)
+    const listener = vi.mocked(browser.tabs.onActivated.addListener).mock.calls.at(-1)![0]
+    listener({ tabId: 1, windowId: 1 })
+    await flushPromises()
+    expect(window.location.replace).toHaveBeenCalledWith('https://example.com')
+    wrapper.unmount()
+    expect(browser.tabs.onActivated.removeListener).toHaveBeenCalledWith(listener)
   })
 
   it('never navigates to active content even in a selected tab', async () => {

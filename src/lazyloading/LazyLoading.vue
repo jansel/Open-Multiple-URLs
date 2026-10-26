@@ -35,6 +35,8 @@ onMounted(() => {
 
   // Never execute active content from a URL fragment inside an extension page.
   if (!canNavigate) return
+  // Activation can finish after the DOM focus event, so also listen to Chrome directly.
+  browser.tabs.onActivated.addListener(navigateIfSelected)
   window.addEventListener('focus', navigateIfSelected)
   document.addEventListener('visibilitychange', navigateIfSelected)
   // A quickly selected tab may already be active before this script runs.
@@ -42,6 +44,7 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
+  browser.tabs.onActivated.removeListener(navigateIfSelected)
   window.removeEventListener('focus', navigateIfSelected)
   document.removeEventListener('visibilitychange', navigateIfSelected)
 })
