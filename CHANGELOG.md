@@ -1,6 +1,8 @@
 # Changelog
 
-## 2.1.0 — Unreleased
+## 2.1.0 — October 25, 2026
+
+Submitted for Chrome Web Store review, replacing the pending 2.0.0 submission.
 
 - Enable Ignore duplicate URLs and Preserve input by default on new installs. All settings and input remain local to each browser profile.
 - Add a Clear button that empties the input and its saved copy, then returns focus to the editor.

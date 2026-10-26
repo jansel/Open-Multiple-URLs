@@ -4,7 +4,7 @@ This fork has its own Chrome Web Store item under Jason Ansel’s developer acco
 
 ## Build a release
 
-1. Update `package.json` with a new Chrome-compatible version and add its changes to `CHANGELOG.md`. Version 2.1.0 is prepared to replace the pending 2.0.0 submission.
+1. Update `package.json` with a new Chrome-compatible version and add its changes to `CHANGELOG.md`.
 2. Run `npm ci`, `npx playwright install chromium`, and `npm run check:all`.
 3. Run `npm run package:chrome`. For 2.1.0, the output is `dist-package/open-multiple-urls-tab-2.1.0-chrome.zip`. The manifest is at the ZIP root, and the GPL license is included.
 4. Run `npm run screenshots` if the interface changed. Review the PNGs in `docs/store`.
@@ -26,13 +26,17 @@ Current listing ID: `legkeidpegglajidbdpiddmallhmfokj`.
 
 Current store URL: https://chromewebstore.google.com/detail/legkeidpegglajidbdpiddmallhmfokj
 
-Version 2.0.0 was submitted on **October 25, 2026** and is **pending review**. It will publish automatically after approval with **Unlisted** visibility, free of charge, in all regions. The listing, icon, light/dark screenshots, privacy disclosures, and reviewer instructions are saved. The privacy policy is publicly reachable and the publisher's contact email is verified. The store link will become installable after approval.
+Version **2.1.0** was submitted on **October 25, 2026** and is **pending review**, replacing the earlier 2.0.0 submission. It will publish automatically after approval with **Unlisted** visibility, free of charge, in all regions. The updated listing, icon, light/dark screenshots, privacy disclosures, and reviewer instructions are saved. The privacy policy is publicly reachable and the publisher's contact email is verified. The store link will become installable after approval.
 
-## Replacing the submission with 2.1.0
+## Submission record: 2.1.0
 
-The 2.1.0 package, refreshed light/dark screenshots, listing copy below, and active [privacy policy](../PRIVACY.md) are ready. Replacement of the pending 2.0.0 submission was requested on October 25, 2026.
+The pending 2.0.0 review was cancelled and replaced with 2.1.0 on October 25, 2026. The dashboard confirmed **Pending review** after submission. Both screenshots were replaced; the listing, storage disclosure, [privacy policy](../PRIVACY.md), and reviewer instructions now describe 2.1.0. The uploaded package requests only `storage` and `tabGroups`; the search permission and its justification are gone.
 
-Cancel the pending review, upload the 2.1.0 ZIP, replace both screenshots, and update the listing and privacy disclosures before resubmitting. Remove the search justification and search feature from the listing. Verify the package requests only `storage` and `tabGroups`, and keep **Unlisted** visibility with automatic publication after approval. Cancelling and resubmitting starts a new review.
+Submitted ZIP: `dist-package/open-multiple-urls-tab-2.1.0-chrome.zip`.
+
+SHA-256: `b0864584155c52d7b180b2582f45c6050e4bdc6a364f4edec3b9c569c54abb0f`.
+
+Validation passed: type checking, lint, formatting, 103 unit tests, the Chrome build, and 7 Chromium end-to-end tests. A separate visible Chromium run passed all 7 tests. GitHub CI also passed for the release source commit `bef924d`.
 
 ## Listing copy for 2.1.0
 
