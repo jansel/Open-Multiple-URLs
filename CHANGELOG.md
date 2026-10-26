@@ -5,6 +5,7 @@
 - Enable Ignore duplicate URLs and Preserve input by default on new installs. All settings and input remain local to each browser profile.
 - Add a Clear button that empties the input and its saved copy, then returns focus to the editor.
 - Replace the random and reverse checkboxes with a single Order dropdown: Original, Reverse, or Random.
+- Simplify the options pane, removing section headings and the lazy-loading info icon. Move tab-group selection and manual URL extraction there; disable extraction when it has no useful result.
 - Check Chrome’s selected-tab state before loading a deferred page, ignoring spurious background focus events.
 - Remove the option to treat non-URLs as search queries and drop the `search` permission.
 - Prepare updated listing copy and a versioned privacy-policy draft without changing the 2.0.0 submission.

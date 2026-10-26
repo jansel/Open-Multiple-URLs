@@ -127,14 +127,9 @@ button:disabled {
   margin-top: 18px;
 }
 #open {
-  order: -2;
   background: var(--accent);
   color: white;
   border-color: var(--accent);
-}
-#tabGroupSelection {
-  order: -1;
-  max-width: 100%;
 }
 #extract,
 #clear {
@@ -153,22 +148,12 @@ h2 {
   font-size: 16px;
   margin: 0 0 22px;
 }
-h3 {
-  color: var(--muted);
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin: 22px 0 12px;
-}
-#option-bar-hwrapper section:first-child h3 {
-  margin-top: 0;
-}
 label.checkbox {
   display: flex;
   align-items: flex-start;
   gap: 8px;
   line-height: 1.5;
-  margin: 13px 0;
+  margin: 0;
   cursor: pointer;
   user-select: none;
   font-size: 13px;
@@ -183,7 +168,7 @@ input[type='checkbox'] {
 .option-hint {
   font-size: 12px;
   color: var(--muted);
-  margin: -3px 0 0 23px;
+  margin: 6px 0 0 23px;
 }
 footer {
   margin-top: 24px;
@@ -202,14 +187,6 @@ footer {
   }
   .workspace-grid {
     grid-template-columns: minmax(0, 1fr);
-  }
-  #option-bar-hwrapper {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 18px;
-  }
-  #option-bar-hwrapper h3 {
-    margin-top: 0;
   }
 }
 @media (max-width: 480px) {
@@ -231,10 +208,6 @@ footer {
   .options-panel {
     padding: 18px;
   }
-  #option-bar-hwrapper {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 10px;
-  }
 }
 @media (prefers-color-scheme: dark) {
   :root {
@@ -253,11 +226,25 @@ footer {
   min-width: 0;
 }
 
-.order-label {
+.option-list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 18px;
+}
+.select-option label {
   display: block;
-  margin: 16px 0 6px;
+  margin-bottom: 6px;
   font-size: 13px;
 }
-#order {
+.select-option select {
+  width: 100%;
+  max-width: 100%;
+}
+.option-tools {
+  margin-top: 22px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+#extract {
   width: 100%;
 }

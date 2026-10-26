@@ -58,7 +58,10 @@ test('opens background tabs in a new group and keeps the workspace available', a
     .fill('https://example.com\nhttps://example.org\nhttps://example.com')
   await workspace.locator('#lazyLoad').check()
   await workspace.locator('#deduplicate').check()
-  await workspace.locator('#tabGroupSelection').selectOption('-2')
+  await workspace
+    .getByRole('complementary', { name: 'Opening options' })
+    .getByLabel('Tab group')
+    .selectOption('-2')
   await workspace.locator('#open').click()
   await expect(workspace.getByRole('status')).toContainText('Finished opening')
   const tabs = extensionContext.pages().filter((page) => page.url().includes('/lazyloading.html#'))

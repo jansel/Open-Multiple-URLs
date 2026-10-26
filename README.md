@@ -38,9 +38,9 @@ Settings, tab-group choices, and saved input are local to each browser profile.
 
 Click the toolbar icon, paste a list or text containing links, then click **Open URLs**. Each nonempty line becomes one tab; addresses without a scheme get `http://` added. Lines are never sent to a search provider by the extension.
 
-Automatic extraction runs only on a paste that replaces the entire field (including an empty field). Use **Extract URLs from text** whenever you want to extract manually. Extraction recognizes explicit schemes such as `https://`, `www.` addresses, and certain domain/path forms; plain bare domains or text with no recognizable links are kept as entered. If a paste mixes recognizable links with other text, only the extracted links remain.
+Automatic extraction runs only on a paste that replaces the entire field (including an empty field). Use **Extract URLs from text** in the **Opening options** pane to extract manually. It is disabled when no URLs are found or extraction would leave the list unchanged. Extraction recognizes explicit schemes such as `https://`, `www.` addresses, and certain domain/path forms; plain bare domains or text with no recognizable links are kept as entered. If a paste mixes recognizable links with other text, only the extracted links remain.
 
-**Do not load tabs until selected** opens placeholder tabs that navigate when selected. Browser-internal pages, file URLs, and active-content URLs cannot be deferred. **Ignore duplicate URLs**, enabled by default, compares input lines exactly. **Order** selects the original input order, its reverse, or a random order. Tab groups are scoped to the current window and refreshed when the workspace regains focus.
+**Do not load tabs until selected** opens placeholder tabs that navigate when selected. Browser-internal pages, file URLs, and active-content URLs cannot be deferred. **Ignore duplicate URLs**, enabled by default, compares input lines exactly. **Order** selects the original input order, its reverse, or a random order. Choose **Tab group** in the options pane. Tab groups are scoped to the current window and refreshed when the workspace regains focus.
 
 ## Development
 

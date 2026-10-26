@@ -60,6 +60,35 @@ describe('workspace', () => {
     await wrapper.get('#urls').setValue('foo https://github.com bar')
     await wrapper.get('#extract').trigger('click')
     expect(wrapper.get('#urls').element).toHaveProperty('value', 'https://github.com\n')
+    expect(wrapper.get('#extract').element).toHaveProperty('disabled', true)
+  })
+
+  it.each([
+    '',
+    '   ',
+    'A note with no links',
+    'https://example.com',
+    'https://example.com\nhttps://example.org\n',
+    'https://example.com\r\nhttps://example.org\r\n'
+  ])('disables extraction when it has no useful result for %j', async (text) => {
+    const wrapper = mount(App)
+    await flushPromises()
+    await wrapper.get('#urls').setValue(text)
+    expect(wrapper.get('#extract').element).toHaveProperty('disabled', true)
+    await wrapper.get('#extract').trigger('click')
+    expect(wrapper.get('#urls').element).toHaveProperty('value', text.replace(/\r\n?/g, '\n'))
+  })
+
+  it('enables extraction again when prose is added to a clean list', async () => {
+    const wrapper = mount(App)
+    await flushPromises()
+    await wrapper.get('#urls').setValue('https://example.com\n')
+    expect(wrapper.get('#extract').element).toHaveProperty('disabled', true)
+    await wrapper.get('#urls').setValue('Visit https://example.com today')
+    expect(wrapper.get('#extract').element).toHaveProperty('disabled', false)
+    await wrapper.get('#extract').trigger('click')
+    expect(wrapper.get('#urls').element).toHaveProperty('value', 'https://example.com\n')
+    expect(wrapper.get('#extract').element).toHaveProperty('disabled', true)
   })
 
   it.each(['original', 'reverse', 'random'])(
