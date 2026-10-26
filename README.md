@@ -5,8 +5,6 @@ This is [Jason Ansel's independent fork](https://github.com/jansel/Open-Multiple
 [htrinter/Open-Multiple-URLs](https://github.com/htrinter/Open-Multiple-URLs), based on upstream 1.7.5.
 It has its own releases and is not intended to merge upstream.
 
-Version **2.1.0** is submitted to the Chrome Web Store and **pending review**.
-
 ![Open Multiple URLs Tab](docs/store/screenshot-light.png)
 
 ## What is different
@@ -23,7 +21,7 @@ The upstream options for lazy loading, deduplication, random/reverse order, and 
 
 ## Install
 
-Version 2.1.0 was submitted to the [Chrome Web Store](https://chromewebstore.google.com/detail/legkeidpegglajidbdpiddmallhmfokj) on October 25, 2026, replacing the earlier 2.0.0 submission, and is **pending review**. It will publish automatically with **Unlisted** visibility after Google's approval. The upstream store listing installs a different extension.
+Install [Open Multiple URLs Tab from the Chrome Web Store](https://chromewebstore.google.com/detail/legkeidpegglajidbdpiddmallhmfokj).
 
 For local installation:
 
