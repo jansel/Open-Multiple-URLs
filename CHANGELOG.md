@@ -8,7 +8,7 @@
 - Simplify the options pane, removing section headings and the lazy-loading info icon. Move tab-group selection and manual URL extraction there; disable extraction when it has no useful result.
 - Check Chrome’s selected-tab state before loading a deferred page, ignoring spurious background focus events.
 - Remove the option to treat non-URLs as search queries and drop the `search` permission.
-- Prepare updated listing copy and a versioned privacy-policy draft without changing the 2.0.0 submission.
+- Refresh the store screenshots, listing copy, and privacy policy for the simplified interface and reduced permissions.
 
 ## 2.0.0 — Open Multiple URLs Tab
 

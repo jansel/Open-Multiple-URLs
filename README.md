@@ -5,7 +5,7 @@ This is [Jason Ansel's independent fork](https://github.com/jansel/Open-Multiple
 [htrinter/Open-Multiple-URLs](https://github.com/htrinter/Open-Multiple-URLs), based on upstream 1.7.5.
 It has its own releases and is not intended to merge upstream.
 
-This checkout contains **unreleased 2.1.0** changes. The submitted store package is still 2.0.0.
+Version **2.1.0** is prepared to replace the pending 2.0.0 store submission.
 
 ![Open Multiple URLs Tab](docs/store/screenshot-light.png)
 
@@ -73,7 +73,7 @@ Checks never modify source files. CI runs the complete check suite and uploads t
 - **storage** saves settings, input, and tab-group selection locally in the browser profile.
 - **tabGroups** lists groups in the current window and places newly opened tabs into your chosen group.
 
-The extension requests no website host permissions, browsing-history access, clipboard-reading permission, or search permission. It uses only the text you type or paste into its own page. There are no analytics, extension accounts, advertising, or remotely loaded code. See the [2.1.0 privacy-policy draft](docs/PRIVACY-2.1.md); [PRIVACY.md](PRIVACY.md) continues to describe the submitted 2.0.0 package until the next release.
+The extension requests no website host permissions, browsing-history access, clipboard-reading permission, or search permission. It uses only the text you type or paste into its own page. There are no analytics, extension accounts, advertising, or remotely loaded code. See the [privacy policy](PRIVACY.md).
 
 ## Attribution and license
 

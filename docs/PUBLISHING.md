@@ -1,14 +1,14 @@
 # Publishing Open Multiple URLs Tab
 
-This fork must be published as a **new extension**, under your own Google developer account, with **Unlisted** visibility. Do not update the upstream extension or use its extension ID.
+This fork has its own Chrome Web Store item under Jason Ansel’s developer account, with **Unlisted** visibility. Update the item recorded below; do not use the upstream extension or its ID.
 
 ## Build a release
 
-1. Update `package.json` with a new Chrome-compatible version and add its changes to `CHANGELOG.md`. Version 2.1.0 is currently unreleased; 2.0.0 is the package submitted for review.
+1. Update `package.json` with a new Chrome-compatible version and add its changes to `CHANGELOG.md`. Version 2.1.0 is prepared to replace the pending 2.0.0 submission.
 2. Run `npm ci`, `npx playwright install chromium`, and `npm run check:all`.
 3. Run `npm run package:chrome`. For 2.1.0, the output is `dist-package/open-multiple-urls-tab-2.1.0-chrome.zip`. The manifest is at the ZIP root, and the GPL license is included.
 4. Run `npm run screenshots` if the interface changed. Review the PNGs in `docs/store`.
-5. Commit and push the corresponding source and documentation to your GitHub fork. The local agent commits logical chunks but does not push automatically.
+5. Commit and push the corresponding source and documentation to your GitHub fork. The local agent commits logical chunks and pushes when requested.
 
 The package script uses the npm-provided ZIP library, so it does not require a system `zip` command. It rebuilds before packaging and verifies the version and tab-based manifest. Built output and test profiles are not committed.
 
@@ -28,11 +28,11 @@ Current store URL: https://chromewebstore.google.com/detail/legkeidpegglajidbdpi
 
 Version 2.0.0 was submitted on **October 25, 2026** and is **pending review**. It will publish automatically after approval with **Unlisted** visibility, free of charge, in all regions. The listing, icon, light/dark screenshots, privacy disclosures, and reviewer instructions are saved. The privacy policy is publicly reachable and the publisher's contact email is verified. The store link will become installable after approval.
 
-## Next release: 2.1.0
+## Replacing the submission with 2.1.0
 
-Hold this release until 2.0.0 is approved and publication is requested. Do not cancel or replace the pending submission. The code, screenshots, and copy below describe 2.1.0; none have been uploaded to the dashboard.
+The 2.1.0 package, refreshed light/dark screenshots, listing copy below, and active [privacy policy](../PRIVACY.md) are ready. Replacement of the pending 2.0.0 submission was requested on October 25, 2026.
 
-At release time, publish [PRIVACY-2.1.md](PRIVACY-2.1.md) as the active `PRIVACY.md`, set its effective date, and update the store privacy disclosures. Until then, preserve `PRIVACY.md` and its public URL for 2.0.0. Remove the search justification and search feature from the listing, describe the new defaults, Clear button, and Order dropdown, and upload refreshed screenshots. Verify the built manifest requests only `storage` and `tabGroups`.
+Cancel the pending review, upload the 2.1.0 ZIP, replace both screenshots, and update the listing and privacy disclosures before resubmitting. Remove the search justification and search feature from the listing. Verify the package requests only `storage` and `tabGroups`, and keep **Unlisted** visibility with automatic publication after approval. Cancelling and resubmitting starts a new review.
 
 ## Listing copy for 2.1.0
 
@@ -48,7 +48,7 @@ At release time, publish [PRIVACY-2.1.md](PRIVACY-2.1.md) as the active `PRIVACY
 
 Open a list of links without losing your workspace. Open Multiple URLs Tab puts its interface in a full browser tab that stays open while you browse. Click its toolbar icon again to return to your workspace in the same window.
 
-Paste into an empty field, or select all and paste, to automatically extract links from text. Pasting into part of an existing list leaves your edits unchanged. You can also extract links manually at any time.
+Paste into an empty field, or select all and paste, to automatically extract links from text. Pasting into part of an existing list leaves your edits unchanged. The Opening options pane also offers manual extraction when it would change the input.
 
 Features:
 
